@@ -53,6 +53,7 @@ func questionHandler(w http.ResponseWriter, r *http.Request) {
 		needNewQuestion = true
 		
 		fmt.Fprintf(w, "<h1>il y a %v éléments, %v concepts et %v liens</h1>", len(motor.elements), len(motor.concepts), motor.nbLink)
+		motor.save()
 	}
 	
 	propositions := motor.GetListElement(id)
@@ -143,10 +144,13 @@ func test(){
 	motor.LinkFactory(marteau, outil, 1)
 	
 	id = motor.CreateNewResearch()
+	
+	motor.save()
 }
 
 func main() {
-test()
+motor.load()
+	id = motor.CreateNewResearch()
 	http.HandleFunc("/", makeHandler(questionHandler))
 	http.ListenAndServe(":8080", nil)
 }

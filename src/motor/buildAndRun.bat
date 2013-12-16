@@ -1,0 +1,6 @@
+@echo off
+echo building ...
+call build.bat
+echo runing ...
+call robienSearch.exe
+echo finish !
