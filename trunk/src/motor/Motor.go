@@ -9,6 +9,7 @@ type Motor struct {
 	elements []*Element
 	concepts []*Concept
 	research []*Research
+	links []*Link
 	nbLink int
 	
 }
@@ -21,6 +22,16 @@ func (m *Motor) LinkFactory(e *Element, c *Concept, proba float64)  {
 	l.value = proba
 	l.weight = 1
 	m.nbLink++
+	m.links = append(m.links, l)
+}
+
+func (m *Motor) LinkFactoryWithWeight(e *Element, c *Concept, proba float64, weight float64)  {
+	l := new(Link)
+	l.Create(c, e)
+	l.value = proba
+	l.weight = weight
+	m.nbLink++
+	m.links = append(m.links, l)
 }
 
 func (m *Motor) ElementFactory(name string)  *Element{
@@ -107,5 +118,19 @@ func (m *Motor) GetListElement(id int) []*Proposition {
 	m.research[id].lastPropositions = &p
 	
 	return p
+}
+func (m *Motor) save(){
+
+	saveElements(m.elements)
+	saveConcepts(m.concepts)
+	saveLinks(m.links)
+	
+}
+func (m *Motor) load(){
+
+	loadElements()
+	loadConcepts()
+	loadLinks()
+	
 }
 
