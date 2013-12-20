@@ -12,7 +12,7 @@ type Page struct {
 	Body  []byte
 }
 
-var templates = template.Must(template.ParseFiles("question.html"))
+var templates = template.Must(template.ParseFiles("htmlTemplates/question.html"))
 var id int
 
 
@@ -149,7 +149,8 @@ func test(){
 }
 
 func main() {
-motor.load()
+
+	motor.load()
 	id = motor.CreateNewResearch()
 	http.HandleFunc("/", makeHandler(questionHandler))
 	http.ListenAndServe(":8080", nil)
