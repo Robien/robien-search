@@ -46,10 +46,11 @@ func (c *Concept) GetUtility()  float64 {
 	return score
 }
 
-func (c *Concept) GetUtilitysortedElement(sortedElementId *[]int)  float64 {
+func (c *Concept) GetUtilitysortedElement(sortedElementId *[]int, proba *[]float64)  float64 {
 	score := 0.0
 	first := -1.0
 	second := -1.0
+	bonus := 0
 	
 	for _,l := range c.links{
 		if sortedElementId != nil{
@@ -58,13 +59,19 @@ func (c *Concept) GetUtilitysortedElement(sortedElementId *[]int)  float64 {
 			} else if ((*sortedElementId)[l.element] == 1){
 				second = l.value
 			}
+			if (*proba)[l.element] < 0{
+				bonus--
+			} else if (*proba)[l.element] > 0{
+				bonus++
+			}
 		}
 		
 		score += math.Abs(l.value - 0.5)
 	}
+	score = score / (math.Pow(2.0,float64(bonus)))
 	if first != -1 && second != -1 {
 		score *=  (4*math.Abs(first - second)*math.Abs(first - second))
-		fmt.Println(c.Name, " score :", score)
+		//fmt.Println(c.Name, " score :", score)
 	}
 	return score
 }
