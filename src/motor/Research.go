@@ -38,7 +38,7 @@ func (r *Research) GetNextConcept() *Concept{
 	fmt.Println("----------------------------")
 	for _,e := range r.sortedConcepts{
 		fmt.Println(e.Question)
-		fmt.Println(e.GetUtilitysortedElement(&t))
+		fmt.Println(e.GetUtilitysortedElement(&t, &r.proba))
 	}
 	fmt.Println("----------------------------")
 	r.currentConcept = r.sortedConcepts[0]
@@ -85,13 +85,14 @@ func (a ByUtility) Less(i, j int) bool { return a[i].GetUtility() > a[j].GetUtil
 type conceptsToSort struct {
 	concept *Concept
 	sortedIdElement *[]int
+	proba *[]float64
 }
 
 type ByUtilityElement []*conceptsToSort
 
 func (a ByUtilityElement) Len() int           { return len(a) }
 func (a ByUtilityElement) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
-func (a ByUtilityElement) Less(i, j int) bool { return a[i].concept.GetUtilitysortedElement(a[i].sortedIdElement) > a[j].concept.GetUtilitysortedElement(a[i].sortedIdElement) }
+func (a ByUtilityElement) Less(i, j int) bool { return a[i].concept.GetUtilitysortedElement(a[i].sortedIdElement, a[i].proba) > a[j].concept.GetUtilitysortedElement(a[j].sortedIdElement, a[j].proba) }
 
 
 
@@ -115,6 +116,7 @@ var t []int
 	for i, e := range r.sortedConcepts{
 		p[i] = new(conceptsToSort)
 		p[i].concept = e
+		p[i].proba = &r.proba
 		if r.lastPropositions!= nil{
 			p[i].sortedIdElement = &t
 		}else{
